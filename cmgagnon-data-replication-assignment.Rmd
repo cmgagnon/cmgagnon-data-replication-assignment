@@ -40,19 +40,25 @@ d
 par(mfrow = c(1, 1))
 boxplot(data = d, time_since_birth ~ ID, col = c("lightpink1"))
 ```
+So clearly there is a significant amount of variation in days since giving birth but without accounting for other variables this isn't very helpful.
+
 ```{r}
-# we see lots of individual variation let's see how this relates to social rank
+# now let's see how this relates to social rank
 par(mfrow = c(1, 1))
 boxplot(data = d, time_since_birth ~ rank, col = c("lightpink1"))
 ```
+According to the plot, the lowest ranking individuals seem to have longest inter-birth intervals.
+
 ```{r}
-# let's plot time since last birth and rank as it relates to subject ID
+# let's plot time since last birth as it relates to early ecology
 boxplot(data = d, time_since_birth ~ early_ecology, col = c("burlywood2", 
     "lightpink1"))
 ```
-
+There does not appear to be a significant difference in mean but its hard to tell.
 ```{r}
-# let's plot time since last birth and rank as it relates to subject ID
+# Finally, let's plot time since last birth and current as it relates to having given birth
+boxplot(data = d, time_since_birth ~ early_ecology * conceived, col = c("burlywood2", 
+    "lightpink1"))
 boxplot(data = d, time_since_birth ~ current_ecology * conceived, col = c("burlywood2", 
     "lightpink1"))
 ```
@@ -67,20 +73,27 @@ Now let's load the package necessary to conduct our mixed effect modeling.
 ```{r}
 library(lme4)
 ```
+
+The paper looks independently at two fixed outcomes; the resumption of cycling and whether or not the subject gave birth during the observation period. The methods are sightly vague in regards to their modeling approach but they do list which variables they included. I will play around with a few different models for each of the two outcome variables. 
+
+First, let's do some modeling using the binary "conceived" variable to see if we can replicate their results.
+
+
+In this model all varialble listed have an additive effect:
 ```{r}
-lme1 <- lmer(data = d, as.numeric(as.factor(d$conceived)) ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + preg_at_start + (1|ID), REML=FALSE)
+lme1 <- lmer(data = d, as.numeric(as.factor(d$conceived)) ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + preg_at_start + (early_ecology * current_ecology) + (1|ID), REML=FALSE)
 summary(lme1)
 ```
 
+<img src="img/Conception_table" width="###px"/>
 
+
+After try several models I still cannot get my numbers to match theirs. MAybe they mess with some parameters that I couldn't figure out.
 
 ```{r}
-lme2 <- lmer(data = d, as.numeric(as.factor(d$resumed_cycling)) ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + resumed_cycling + (1|ID), REML=FALSE)
+lme2 <- lmer(data = d, as.numeric(as.factor(d$resumed_cycling)) ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + resumed_cycling + (early_ecology * current_ecology) + (1|ID), REML=FALSE)
 summary(lme2)
 ```
 
-```{r}
-lme2 <- lmer(data = d, as.numeric(as.factor(d$conceived)) ~ age + rank + grp_size + (1|ID))
-summary(lme2)
-```
+<img src="img/Cycling_table" width="###px"/>
 
