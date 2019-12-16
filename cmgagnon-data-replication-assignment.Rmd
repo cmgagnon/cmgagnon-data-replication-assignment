@@ -85,7 +85,7 @@ lme1 <- lmer(data = d, as.numeric(as.factor(d$conceived)) ~ early_ecology + curr
 summary(lme1)
 ```
 
-<img src="img/Conception_table" width="###px"/>
+<img src="img/Conception_table.png" width="###px"/>
 
 
 After try several models I still cannot get my numbers to match theirs. MAybe they mess with some parameters that I couldn't figure out.
@@ -95,5 +95,5 @@ lme2 <- lmer(data = d, as.numeric(as.factor(d$resumed_cycling)) ~ early_ecology 
 summary(lme2)
 ```
 
-<img src="img/Cycling_table" width="###px"/>
+<img src="img/Cycling_table.png" width="###px"/>
 
