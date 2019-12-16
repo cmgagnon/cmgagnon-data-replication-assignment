@@ -1,29 +1,86 @@
 ---
-title: "Replication Assignment"
-author: "Christian Gagnon"
-date: "12/16/2019"
-output: html_document
+title: "Replication Assignment: Developmental constraints in a wild primate"
+author: "Amanda J. Lea, Jeanne Altmann, Susan C. Alberts, and Jenny Tung"
+date: "by: Christian Gagnon"
+output:
+  prettydoc::html_pretty:
+    theme: Architect
+    highlight: github
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Replication Assignment:
-# Developmental constraints in a wild primate
-## Amanda J. Lea, Jeanne Altmann, Susan C. Alberts, and Jenny Tung
 
-**Abstract:**
-In this study, the authors investigated the ways in which environmental conditions affect development in female baboons (*Papio cynocephalus*). According to the predictive adaptive response hypothesis outlined in the article, environmental challenges during early development should result in adaptive adjustments to prepare the individual for similarly harsh future conditions. In the contending, developmental constraint hypothesis, the cost of early adversity is greater than the potential future benefits. This study aims to determine which of these two hypotheses is supported. To get at this question, they collected long-term data on two sets of female baboons in Amboseli, Kenya. The first set were females born in the dry season when food availability was low. While the other group benefited from being born during productive years when rainfall was above average. For each subject they measured and recorded fertility related variables including: age, rank, group size, time since last birth, whether females were cycling or pregnant, and loss of infant. They then used generalized linear mixed modeling to test the relationship between early environment and the previously mentioned covariates. The findings lend support for the developmental constraint hypothesis as females who faced greater challenges early in life had overall lower reproductive success during drought periods than females born in more prosperous years. They also recognized that the offspring of high ranking females were more resilient to decreases in fertility during droughts, regardless of their early environment.They interpret these findings as suggesting that poor conditions during early development having long term detrimental reproductive ramifications.
+## Packages:
+The following packages must be installed in order to complete this module:
 
-Before we begin we will need to load in our dat which was obtained [here] (https://datadryad.org/stash/dataset/doi:10.5061/dryad.5r37g):
+* {curl}
+* {lme4}
+
+## Abstract:
+In this study, the authors investigated the ways in which environmental conditions affect development in female baboons (*Papio cynocephalus*). According to the predictive adaptive response hypothesis outlined in the article, environmental challenges during early development should result in adaptive adjustments to prepare the individual for similarly harsh future conditions. In the contending, developmental constraint hypothesis, the cost of early adversity is greater than the potential future benefits. This study aims to determine which of these two hypotheses is supported. To get at this question, they collected long-term data on two sets of female baboons in Amboseli, Kenya. The first set were females born in the dry season when food availability was low. While the other group benefited from being born during productive years when rainfall was above average. For each subject they measured and recorded fertility related variables including: age, rank, group size, time since last birth, whether females were cycling or pregnant, and loss of infant. They then used linear mixed modeling to test the relationship between early environment and the previously mentioned covariates. The findings lend support for the developmental constraint hypothesis as females who faced greater challenges early in life had overall lower reproductive success during drought periods than females born in more prosperous years. They also recognized that the offspring of high ranking females were more resilient to decreases in fertility during droughts, regardless of their early environment.They interpret these findings as suggesting that poor conditions during early development having long term detrimental reproductive ramifications.
+
+## Replication
+
+Before we begin we will need to load in our data which was obtained [here] (https://datadryad.org/stash/dataset/doi:10.5061/dryad.5r37g):
 
 ```{r}
-f <- curl("https://raw.githubusercontent.com/laurabw/AN597_GroupProject_LLMC/master/kamcoop.simplified.2.csv")
+library(curl)
+f <- curl("https://raw.githubusercontent.com/cmgagnon/cmgagnon-data-replication-assignment/master/dev_constraints_dryad_dataset.csv")
 d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = TRUE)
 head(d)
 summary(d)
 str(d) # There are 3 different families, this is probably what we will use for the analysis
-plot(d$Family, d$Body_mass_male_mean)
+d
+```
+```{r}
+# first, some exploratory visualization let's plot time since giving birth (days) in relation to subject ID
+par(mfrow = c(1, 1))
+boxplot(data = d, time_since_birth ~ ID, col = c("lightpink1"))
+```
+```{r}
+# we see lots of individual variation let's see how this relates to social rank
+par(mfrow = c(1, 1))
+boxplot(data = d, time_since_birth ~ rank, col = c("lightpink1"))
+```
+```{r}
+# let's plot time since last birth and rank as it relates to subject ID
+boxplot(data = d, time_since_birth ~ early_ecology, col = c("burlywood2", 
+    "lightpink1"))
+```
+
+```{r}
+# let's plot time since last birth and rank as it relates to subject ID
+boxplot(data = d, time_since_birth ~ current_ecology * conceived, col = c("burlywood2", 
+    "lightpink1"))
+```
+
+```{r}
+# let's plot time since last birth and rank as it relates to subject ID
+boxplot(data = d, time_since_birth ~ current_ecology * conceived, col = c("burlywood2", 
+    "lightpink1"))
+```
+
+Now let's load the package necessary to conduct our mixed effect modeling.
+```{r}
+library(lme4)
+```
+```{r}
+lme1 <- lmer(data = d, as.numeric(as.factor(d$conceived)) ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + preg_at_start + (1|ID), REML=FALSE)
+summary(lme1)
+```
+
+
+
+```{r}
+lme2 <- lmer(data = d, as.numeric(as.factor(d$resumed_cycling)) ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + resumed_cycling + (1|ID), REML=FALSE)
+summary(lme2)
+```
+
+```{r}
+lme2 <- lmer(data = d, as.numeric(as.factor(d$conceived)) ~ age + rank + grp_size + (1|ID))
+summary(lme2)
 ```
 
