@@ -18,6 +18,11 @@ The following packages must be installed in order to complete this module:
 
 * {curl}
 * {lme4}
+* {shiny}
+
+```{r}
+library(shiny)
+```
 
 ## Abstract:
 In this study, the authors investigated the ways in which environmental conditions affect development in female baboons (*Papio cynocephalus*). According to the predictive adaptive response hypothesis outlined in the article, environmental challenges during early development should result in adaptive adjustments to prepare the individual for similarly harsh future conditions. In the contending, developmental constraint hypothesis, the cost of early adversity is greater than the potential future benefits. This study aims to determine which of these two hypotheses is supported. To get at this question, they collected long-term data on two sets of female baboons in Amboseli, Kenya. The first set were females born in the dry season when food availability was low. While the other group benefited from being born during productive years when rainfall was above average. For each subject they measured and recorded fertility related variables including: age, rank, group size, time since last birth, whether females were cycling or pregnant, and loss of infant. They then used linear mixed modeling to test the relationship between early environment and the previously mentioned covariates. The findings lend support for the developmental constraint hypothesis as females who faced greater challenges early in life had overall lower reproductive success during drought periods than females born in more prosperous years. They also recognized that the offspring of high ranking females were more resilient to decreases in fertility during droughts, regardless of their early environment.They interpret these findings as suggesting that poor conditions during early development having long term detrimental reproductive ramifications.
@@ -25,7 +30,7 @@ In this study, the authors investigated the ways in which environmental conditio
 ## Replication
 
 ### Loading in the data
-Before we begin we will need to load in our data which was obtained  (https://datadryad.org/stash/dataset/doi:10.5061/dryad.5r37g "HERE").
+Before we begin we will need to load in our data which was obtained [here.](https://datadryad.org/stash/dataset/doi:10.5061/dryad.5r37g)
 
 ```{r}
 library(curl)
