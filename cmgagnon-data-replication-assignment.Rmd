@@ -24,6 +24,7 @@ In this study, the authors investigated the ways in which environmental conditio
 
 ## Replication
 
+### Loading in the data
 Before we begin we will need to load in our data which was obtained [here] (https://datadryad.org/stash/dataset/doi:10.5061/dryad.5r37g):
 
 ```{r}
@@ -35,6 +36,8 @@ summary(d)
 str(d) # There are 3 different families, this is probably what we will use for the analysis
 d
 ```
+
+### Data Visualization
 ```{r}
 # first, some exploratory visualization let's plot time since giving birth (days) in relation to subject ID
 par(mfrow = c(1, 1))
@@ -69,6 +72,8 @@ boxplot(data = d, time_since_birth ~ current_ecology * conceived, col = c("burly
     "lightpink1"))
 ```
 
+### Generalized Linear Mixed Modeling
+
 Now let's load the package necessary to conduct our mixed effect modeling.
 ```{r}
 library(lme4)
@@ -79,21 +84,39 @@ The paper looks independently at two fixed outcomes; the resumption of cycling a
 First, let's do some modeling using the binary "conceived" variable to see if we can replicate their results.
 
 
-In this model all varialble listed have an additive effect:
+They state in the paper that they used the lmer wrapper function but their table of result say "Results of Generalized Linear Mixed Models" so I think they used the glmer wrapper so thats what I will use. In this model all varialble listed have an additive effect:
 ```{r}
-lme1 <- lmer(data = d, as.numeric(as.factor(d$conceived)) ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + preg_at_start + (early_ecology * current_ecology) + (1|ID), REML=FALSE)
-summary(lme1)
+glme1 <- glmer(data = d, as.numeric(as.factor(d$conceived)) ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + preg_at_start + (early_ecology * current_ecology) + (1|ID), REML=FALSE)
+summary(glme1)
 ```
 
 <img src="img/Conception_table.png" width="###px"/>
 
-
-After try several models I still cannot get my numbers to match theirs. MAybe they mess with some parameters that I couldn't figure out.
+After trying several models I still cannot get my numbers to match theirs. MAybe they mess with some parameters that I couldn't figure out. After a little more digging, it looks like I might need to specify the family of error. In the article they say they used a binomial error with a logit link function. Not sure I fully understand what this does but I believe it allows the glmer wrapper to model binary outcomes (i.e. conveived/did not conceive). 
 
 ```{r}
-lme2 <- lmer(data = d, as.numeric(as.factor(d$resumed_cycling)) ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + resumed_cycling + (early_ecology * current_ecology) + (1|ID), REML=FALSE)
-summary(lme2)
+glme1a <- glmer(data = d, conceived ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + preg_at_start + (early_ecology * current_ecology) + (1|ID), family=binomial(link = "logit"))
+summary(glme1a)
+```
+Still does not look right and I am getting errors about eigen values being too high. I believe this means the model is over fitted but I am using the same variable they did. 
+
+Actually, I wasn't! I will add age as a quadratic effect and see if that does the trick.
+
+```{r}
+glme1b <- glmer(data = d, conceived ~ early_ecology + current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + preg_at_start + (early_ecology * current_ecology) + (1|ID), family=binomial(link = "logit"))
+summary(glme1b)
+```
+I think this may be as close as I am going to get. 
+
+Now lets do the same with resumption of cycling as the binary out
+```{r}
+glme2 <- glmer(data = d, resumed_cycling ~ early_ecology + current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + cycling_at_start + (early_ecology * current_ecology) + (1|ID), family=binomial(link = "logit"))
+summary(glme2)
 ```
 
 <img src="img/Cycling_table.png" width="###px"/>
 
+
+Got very close with this one as well but its not an exact replication.
+
+## Discussion
