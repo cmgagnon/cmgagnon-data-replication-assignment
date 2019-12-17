@@ -24,6 +24,7 @@ The following packages must be installed in order to complete this module:
 * {curl}
 * {lme4}
 * {shiny}
+* {car}
 
 ## Abstract:
 In this study, the authors investigated the ways in which environmental conditions affect development in female baboons (*Papio cynocephalus*). According to the predictive adaptive response hypothesis outlined in the article, environmental challenges during early development should result in adaptive adjustments to prepare the individual for similarly harsh future conditions. In the contending, developmental constraint hypothesis, the cost of early adversity is greater than the potential future benefits. This study aims to determine which of these two hypotheses is supported. To get at this question, they collected long-term data on two sets of female baboons in Amboseli, Kenya. The first set were females born in the dry season when food availability was low. While the other group benefited from being born during productive years when rainfall was above average. For each subject they measured and recorded fertility related variables including: age, rank, group size, time since last birth, whether females were cycling or pregnant, and loss of infant. They then used linear mixed modeling to test the relationship between early environment and the previously mentioned covariates. The findings lend support for the developmental constraint hypothesis as females who faced greater challenges early in life had overall lower reproductive success during drought periods than females born in more prosperous years. They also recognized that the offspring of high ranking females were more resilient to decreases in fertility during droughts, regardless of their early environment.They interpret these findings as suggesting that poor conditions during early development having long term detrimental reproductive ramifications.
@@ -58,7 +59,10 @@ boxplot(data = d, time_since_birth ~ rank, col = c("lightpink1"))
 ```
 According to the plot, the lowest ranking individuals seem to have longest inter-birth intervals.
 
-### Generalized Linear Mixed Modeling
+## Generalized Linear Mixed Modeling
+
+### Within-Female Analyses: Interaction between Early-Life
+and Adult Conditions on Female Fertility
 
 Now let's load the package necessary to conduct our mixed effect modeling.
 ```{r}
@@ -78,7 +82,7 @@ summary(glme1)
 
 <img src="img/Conception_table.png" width="###px"/>
 
-After trying several models I still cannot get my numbers to match theirs. MAybe they mess with some parameters that I couldn't figure out. After a little more digging, it looks like I might need to specify the family of error. In the article they say they used a binomial error with a logit link function. Not sure I fully understand what this does but I believe it allows the glmer wrapper to model binary outcomes (i.e. conveived/did not conceive). 
+After trying several models I still cannot get my numbers to match theirs. Maybe they messed around with some parameters that I couldn't figure out. After a little more digging, it looks like I might need to specify the family of error. In the article they say they used a binomial error with a logit link function. Not sure I fully understand what this does but I believe it allows the glmer wrapper to model binary outcomes (i.e. conveived/did not conceive). 
 
 ```{r}
 glme1a <- glmer(data = d, conceived ~ early_ecology + current_ecology + age + rank + grp_size + time_since_birth + infant_death + preg_at_start + (early_ecology * current_ecology) + (1|ID), family=binomial(link = "logit"))
@@ -96,6 +100,22 @@ summary(glme1b)
 
 I think this may be as close as I am going to get. Everything except the Intercept, Current environment and Early environment do not match. 
 
+LEt's plot the residuals:
+```{r}
+scatter.smooth(fitted(glme1b), residuals(glme1b, type = "pearson"),
+     mgp = c(2.2, 1, 0),
+     ylab = "Residuals (Pearson)",
+     xlab = "Predicted conceived proportion")
+title("Residual plot", line = 0.7)
+abline(h = 0, col="blue")
+```
+Well this is definately concerning. We shouldnt see a pattern in our residuals but maybe this has to do with the fact that we have a binary response variable.
+
+```{r}
+library(car)
+Anova(glme1b)
+```
+
 Now lets do the same with resumption of cycling as the binary out
 ```{r}
 glme2 <- glmer(data = d, resumed_cycling ~ early_ecology + current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + cycling_at_start + (early_ecology * current_ecology) + (1|ID), family=binomial(link = "logit"))
@@ -106,6 +126,37 @@ summary(glme2)
 
 
 Got very close with this one as well, but its not an exact replication.
+
+LEt's plot the residuals:
+```{r}
+scatter.smooth(fitted(glme2), residuals(glme2, type = "pearson"),
+     mgp = c(2.2, 1, 0),
+     ylab = "Residuals (Pearson)",
+     xlab = "Predicted conceived proportion")
+title("Residual plot", line = 0.7)
+abline(h = 0, col="blue")
+```
+
+```{r}
+plot(fitted(glme2), residuals(glme2),xlab ="Fitted Values", ylab = "Residuals")
+  abline(h=0, lty=2)
+  lines(smooth.spline(fitted(glme2), residuals(glme2)))
+```
+```{r}
+qqnorm(residuals(glme2))
+```
+
+### Effects of Maternal Dominance Rank on Female Fertility:
+
+```{r}
+lm1 <- lm(residuals(glme1b) ~ maternal_rank)
+summary(lm1)
+```
+
+```{r}
+Anova(glme2)
+```
+
 
 ## Discussion
 
