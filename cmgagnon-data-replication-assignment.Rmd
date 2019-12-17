@@ -12,6 +12,11 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(shiny)
+```
+
+Instructions to the assignment can be found [here.](https://fuzzyatelin.github.io/bioanth-stats/data-reanalysis-assignment.html)
 
 ## Packages:
 The following packages must be installed in order to complete this module:
@@ -19,10 +24,6 @@ The following packages must be installed in order to complete this module:
 * {curl}
 * {lme4}
 * {shiny}
-
-```{r}
-library(shiny)
-```
 
 ## Abstract:
 In this study, the authors investigated the ways in which environmental conditions affect development in female baboons (*Papio cynocephalus*). According to the predictive adaptive response hypothesis outlined in the article, environmental challenges during early development should result in adaptive adjustments to prepare the individual for similarly harsh future conditions. In the contending, developmental constraint hypothesis, the cost of early adversity is greater than the potential future benefits. This study aims to determine which of these two hypotheses is supported. To get at this question, they collected long-term data on two sets of female baboons in Amboseli, Kenya. The first set were females born in the dry season when food availability was low. While the other group benefited from being born during productive years when rainfall was above average. For each subject they measured and recorded fertility related variables including: age, rank, group size, time since last birth, whether females were cycling or pregnant, and loss of infant. They then used linear mixed modeling to test the relationship between early environment and the previously mentioned covariates. The findings lend support for the developmental constraint hypothesis as females who faced greater challenges early in life had overall lower reproductive success during drought periods than females born in more prosperous years. They also recognized that the offspring of high ranking females were more resilient to decreases in fertility during droughts, regardless of their early environment.They interpret these findings as suggesting that poor conditions during early development having long term detrimental reproductive ramifications.
@@ -38,7 +39,7 @@ f <- curl("https://raw.githubusercontent.com/cmgagnon/cmgagnon-data-replication-
 d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = TRUE)
 head(d)
 summary(d)
-str(d) # There are 3 different families, this is probably what we will use for the analysis
+str(d) 
 d
 ```
 
@@ -56,26 +57,6 @@ par(mfrow = c(1, 1))
 boxplot(data = d, time_since_birth ~ rank, col = c("lightpink1"))
 ```
 According to the plot, the lowest ranking individuals seem to have longest inter-birth intervals.
-
-```{r}
-# let's plot time since last birth as it relates to early ecology
-boxplot(data = d, time_since_birth ~ early_ecology, col = c("burlywood2", 
-    "lightpink1"))
-```
-There does not appear to be a significant difference in mean but its hard to tell.
-```{r}
-# Finally, let's plot time since last birth and current as it relates to having given birth
-boxplot(data = d, time_since_birth ~ early_ecology * conceived, col = c("burlywood2", 
-    "lightpink1"))
-boxplot(data = d, time_since_birth ~ current_ecology * conceived, col = c("burlywood2", 
-    "lightpink1"))
-```
-
-```{r}
-# let's plot time since last birth and rank as it relates to subject ID
-boxplot(data = d, time_since_birth ~ current_ecology * conceived, col = c("burlywood2", 
-    "lightpink1"))
-```
 
 ### Generalized Linear Mixed Modeling
 
