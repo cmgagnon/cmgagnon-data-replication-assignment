@@ -106,7 +106,9 @@ Actually, I wasn't! I will add age as a quadratic effect and see if that does th
 glme1b <- glmer(data = d, conceived ~ early_ecology + current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + preg_at_start + (early_ecology * current_ecology) + (1|ID), family=binomial(link = "logit"))
 summary(glme1b)
 ```
-I think this may be as close as I am going to get. 
+<img src="img/Conception_table.png" width="###px"/>
+
+I think this may be as close as I am going to get. Everything except the Intercept, Current environment and Early environment do not match. 
 
 Now lets do the same with resumption of cycling as the binary out
 ```{r}
@@ -117,6 +119,8 @@ summary(glme2)
 <img src="img/Cycling_table.png" width="###px"/>
 
 
-Got very close with this one as well but its not an exact replication.
+Got very close with this one as well, but its not an exact replication.
 
 ## Discussion
+
+According to my somewhat replicated results, the conclusion put forth by the authors appear reasonable. Individuals subjected to poor quality environments do not appear to out-reproduce others when faced with similar conditions after reaching sexual maturity. Instead, the data supports the developmental constraint hypothesis as female born low quality settings show reduced reproductive success. 
