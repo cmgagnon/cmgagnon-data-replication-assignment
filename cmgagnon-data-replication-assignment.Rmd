@@ -25,7 +25,7 @@ In this study, the authors investigated the ways in which environmental conditio
 ## Replication
 
 ### Loading in the data
-Before we begin we will need to load in our data which was obtained [here] (https://datadryad.org/stash/dataset/doi:10.5061/dryad.5r37g):
+Before we begin we will need to load in our data which was obtained  (https://datadryad.org/stash/dataset/doi:10.5061/dryad.5r37g "HERE").
 
 ```{r}
 library(curl)
