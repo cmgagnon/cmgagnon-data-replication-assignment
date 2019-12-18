@@ -145,19 +145,80 @@ plot(fitted(glme2), residuals(glme2),xlab ="Fitted Values", ylab = "Residuals")
 ```{r}
 qqnorm(residuals(glme2))
 ```
-
-### Effects of Maternal Dominance Rank on Female Fertility:
-
-```{r}
-lm1 <- lm(residuals(glme1b) ~ maternal_rank)
-summary(lm1)
-```
-
 ```{r}
 Anova(glme2)
 ```
 
+### Effects of Maternal Dominance Rank on Female Fertility:
+
+The authors also tested whether inherited social status had an effect on fertility. To test this they used the residuals from the generalized linear mixed models in the previous section to conduct a linear model that asked if maternal rank was correlated with maternal dominace rank. Unfortunately, I could not firgure out how they did this. But, I think I found a work around that might get at the same question.
+
+Instead of comparing the residuals to rank. I am going to compare models which both include and omit maternal rank as a fixed effect. I will compare each model to the null and which ever returns a lower p value will be the winner.
+
+first we need to exclude individuals born in high quality environments from our dataset.
+```{r}
+newdata <- d[ which(d$early_ecology=='LQ'), ]
+newdata
+```
+
+Then we build our models, starting with conception as our response variable.
+
+No Maternal rank:
+```{r}
+glme1c <- glmer(data = newdata, conceived ~ current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + preg_at_start + (1|ID), family=binomial(link = "logit"))
+summary(glme1c)
+```
+
+with maternal rank:
+```{r}
+glme1d <- glmer(data = newdata, conceived ~ current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + preg_at_start + maternal_rank + (1|ID), family=binomial(link = "logit"))
+summary(glme1c)
+```
+
+Null model:
+```{r}
+glme1e <- glmer(data = newdata, conceived ~  (1|ID), family=binomial(link = "logit"))
+summary(glme1e)
+```
+
+Fit check 
+
+null vs no maternal rank
+```{r}
+anova(glme1e,glme1c)
+```
+
+null vs maternal rank included
+```{r}
+anova(glme1e,glme1d)
+```
+Model **glmer1c** seems to be a better fit which means maternal rank is not affecting the probablity of conceiving in females which were born in adverse conditions.
+
+And now again with the cycling response variable:
+```{r}
+glme2a <- glmer(data = newdata, resumed_cycling ~ current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + cycling_at_start + (1|ID), family=binomial(link = "logit"))
+summary(glme2a)
+```
+
+```{r}
+glme2b <- glmer(data = newdata, resumed_cycling ~ current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + cycling_at_start + maternal_rank + (1|ID), family=binomial(link = "logit"))
+summary(glme2b)
+```
+
+```{r}
+glme2c <- glmer(data = newdata, resumed_cycling ~ (1|ID), family=binomial(link = "logit"))
+summary(glme2c)
+```
+
+```{r}
+anova(glme2c,glme2a)
+```
+
+```{r}
+anova(glme2c,glme2b)
+```
+So it appears that model **glme2a** which does not include maternal rank is a better fit which means that maternal rank may not be a factor in the resumption of cycle of females which where born in poor conditions.
 
 ## Discussion
 
-According to my somewhat replicated results, the conclusion put forth by the authors appear reasonable. Individuals subjected to poor quality environments do not appear to out-reproduce others when faced with similar conditions after reaching sexual maturity. Instead, the data supports the developmental constraint hypothesis as female born low quality settings show reduced reproductive success. 
+According to my somewhat replicated results, the conclusions put forth by the authors appear reasonable. Individuals subjected to poor quality environments do not appear to out-reproduce others when faced with similar conditions after reaching sexual maturity. Instead, the data supports the developmental constraint hypothesis as female born low quality settings show reduced reproductive success. Furthermore, it does not appear that inherited rank has an effect on future reproductive success for individuals born in poor environments.
