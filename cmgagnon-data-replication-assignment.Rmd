@@ -98,7 +98,7 @@ summary(glme1b)
 ```
 <img src="img/Conception_table.png" width="###px"/>
 
-I think this may be as close as I am going to get. Everything except the Intercept, Current environment and Early environment do not match. 
+I think this may be as close as I am going to get. Everything except the Intercept, Current environment and Early environment seems to match. 
 
 LEt's plot the residuals:
 ```{r}
