@@ -109,6 +109,7 @@ scatter.smooth(fitted(glme1b), residuals(glme1b, type = "pearson"),
 title("Residual plot", line = 0.7)
 abline(h = 0, col="blue")
 ```
+
 Well this is definately concerning. We shouldnt see a pattern in our residuals but maybe this has to do with the fact that we have a binary response variable.
 
 ```{r}
@@ -116,7 +117,7 @@ library(car)
 Anova(glme1b)
 ```
 
-Now lets do the same with resumption of cycling as the binary out
+Now lets do the same with resumption of cycling as the binary outcome:
 ```{r}
 glme2 <- glmer(data = d, resumed_cycling ~ early_ecology + current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + cycling_at_start + (early_ecology * current_ecology) + (1|ID), family=binomial(link = "logit"))
 summary(glme2)
