@@ -193,7 +193,7 @@ null vs maternal rank included
 ```{r}
 anova(glme1e,glme1d)
 ```
-Model **glmer1c** seems to be a better fit which means maternal rank is not affecting the probablity of conceiving in females which were born in adverse conditions.
+Model **glmer1c** seems to be a better fit which means maternal rank is not affecting the probablity of conceiving in females which were born in adverse conditions. However this is the opposite of what they got so I think my work around is a failure.
 
 And now again with the cycling response variable:
 ```{r}
@@ -218,7 +218,35 @@ anova(glme2c,glme2a)
 ```{r}
 anova(glme2c,glme2b)
 ```
-So it appears that model **glme2a** which does not include maternal rank is a better fit which means that maternal rank may not be a factor in the resumption of cycle of females which where born in poor conditions.
+So it appears that model **glme2a** which does not include maternal rank is a better fit which means that maternal rank may not be a factor in the resumption of cycle of females which where born in poor conditions. Again, this is the opposite of what we expected based on the papers results.
+
+one last ditch effort:
+```{r}
+res <- residuals(glme1d)
+res
+```
+
+```{r}
+rank <- newdata$maternal_rank
+rank
+```
+
+```{r}
+library(curl)
+z <- curl("https://raw.githubusercontent.com/cmgagnon/cmgagnon-data-replication-assignment/master/residuals_maternal_rank_matrix.csv")
+x <- read.csv(z, header = TRUE, sep = ",", stringsAsFactors = TRUE)
+head(x)
+```
+
+
+```{r}
+#d$maternal_rank <- as.numeric(as.character(d$maternal_rank))
+
+#res <- residuals(glme1d)
+
+#lm1 <- lm(res, m$ ~d$maternal_rank)
+```
+
 
 ## Discussion
 
