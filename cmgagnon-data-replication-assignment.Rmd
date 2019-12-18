@@ -25,6 +25,8 @@ The following packages must be installed in order to complete this module:
 * {lme4}
 * {shiny}
 * {car}
+* {broom}
+* {dplyr}
 
 ## Abstract:
 In this study, the authors investigated the ways in which environmental conditions affect development in female baboons (*Papio cynocephalus*). According to the predictive adaptive response hypothesis outlined in the article, environmental challenges during early development should result in adaptive adjustments to prepare the individual for similarly harsh future conditions. In the contending, developmental constraint hypothesis, the cost of early adversity is greater than the potential future benefits. This study aims to determine which of these two hypotheses is supported. To get at this question, they collected long-term data on two sets of female baboons in Amboseli, Kenya. The first set were females born in the dry season when food availability was low. While the other group benefited from being born during productive years when rainfall was above average. For each subject they measured and recorded fertility related variables including: age, rank, group size, time since last birth, whether females were cycling or pregnant, and loss of infant. They then used linear mixed modeling to test the relationship between early environment and the previously mentioned covariates. The findings lend support for the developmental constraint hypothesis as females who faced greater challenges early in life had overall lower reproductive success during drought periods than females born in more prosperous years. They also recognized that the offspring of high ranking females were more resilient to decreases in fertility during droughts, regardless of their early environment.They interpret these findings as suggesting that poor conditions during early development having long term detrimental reproductive ramifications.
@@ -96,6 +98,13 @@ Actually, I wasn't! I will add age as a quadratic effect and see if that does th
 glme1b <- glmer(data = d, conceived ~ early_ecology + current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + preg_at_start + (early_ecology * current_ecology) + (1|ID), family=binomial(link = "logit"))
 summary(glme1b)
 ```
+
+```{r}
+library(broom)
+tidy(glme1b)
+```
+
+
 <img src="img/Conception_table.png" width="###px"/>
 
 I think this may be as close as I am going to get. Everything except the Intercept, Current environment and Early environment seems to match. 
@@ -121,6 +130,10 @@ Now lets do the same with resumption of cycling as the binary outcome:
 ```{r}
 glme2 <- glmer(data = d, resumed_cycling ~ early_ecology + current_ecology + age + I(age^2) + rank + grp_size + time_since_birth + infant_death + cycling_at_start + (early_ecology * current_ecology) + (1|ID), family=binomial(link = "logit"))
 summary(glme2)
+```
+
+```{r}
+tidy(glme2)
 ```
 
 <img src="img/Cycling_table.png" width="###px"/>
@@ -221,16 +234,23 @@ anova(glme2c,glme2b)
 So it appears that model **glme2a** which does not include maternal rank is a better fit which means that maternal rank may not be a factor in the resumption of cycle of females which where born in poor conditions. Again, this is the opposite of what we expected based on the papers results.
 
 one last ditch effort:
+
+Let's see what the residuals look like:
 ```{r}
 res <- residuals(glme1b)
 res
 ```
+
+Let's look at the maternal ranks for the females inour new dataset:
 
 ```{r}
 rank <- newdata$maternal_rank
 rank
 ```
 
+I am certain there is a way to put all of these together in r but I can't figure it out at the moment. I will just make a csv manually.
+
+And now to load in:
 ```{r}
 library(curl)
 z <- curl("https://raw.githubusercontent.com/cmgagnon/cmgagnon-data-replication-assignment/master/residuals_maternal_rank_matrix.csv")
@@ -238,10 +258,12 @@ x <- read.csv(z, header = TRUE, sep = ",", stringsAsFactors = TRUE)
 head(x)
 str(x)
 ```
+
+Figure 4 looks like a scatter plot of residuals and maternal rank so let try to recreate that.
 ```{r}
 scatter.smooth(x=x$maternal_ranks, y=x$residuals, main="Residuals ~ Maternal Rank") 
 ```
-
+looks nothing like it. Maybe I am using the residuals from the wrong models. I changed the residual to the one from the glmer model we did in the last section.
 ```{r}
 library(curl)
 q <- curl("https://raw.githubusercontent.com/cmgagnon/cmgagnon-data-replication-assignment/master/residuals_maternal_rank_matrix2.csv")
@@ -250,13 +272,31 @@ head(r)
 str(r)
 ```
 
+Let's try to plot this:
 ```{r}
 scatter.smooth(x=r$maternal_ranks, y=r$residuals, main="Residuals ~ Maternal Rank") 
 ```
 
+Nope! still lokks nothing like it.
+
 ```{r}
-#lm1 <- lm(x, residuals ~ maternal_ranks)
+library(curl)
+i <- curl("https://raw.githubusercontent.com/cmgagnon/cmgagnon-data-replication-assignment/master/residuals_maternal_rank_matrix3.csv")
+h <- read.csv(i, header = TRUE, sep = ",", stringsAsFactors = TRUE)
+head(h)
+str(h)
 ```
+
+```{r}
+library(dplyr)
+zz <- data.frame(h)
+zz
+lm1 <- lm(residuals ~ maternal_ranks + (1|ID),zz)
+tidy(lm1)
+plot(lm1)
+```
+Getting this error:
+Error in as.data.frame.default(data) : cannot coerce class ‘"formula"’ to a data.frame
 
 ```{r}
 #d$maternal_rank <- as.numeric(as.character(d$maternal_rank))
@@ -269,4 +309,4 @@ scatter.smooth(x=r$maternal_ranks, y=r$residuals, main="Residuals ~ Maternal Ran
 
 ## Discussion
 
-According to my somewhat replicated results, the conclusions put forth by the authors appear reasonable. Individuals subjected to poor quality environments do not appear to out-reproduce others when faced with similar conditions after reaching sexual maturity. Instead, the data supports the developmental constraint hypothesis as female born low quality settings show reduced reproductive success. Furthermore, it does not appear that inherited rank has an effect on future reproductive success for individuals born in poor environments.
+According to my somewhat replicated results, the conclusions put forth by the authors appear reasonable. Individuals subjected to poor quality environments do not appear to out-reproduce others when faced with similar conditions after reaching sexual maturity. Instead, the data supports the developmental constraint hypothesis as female born low quality settings show reduced reproductive success. No matter how hard I tried I was not able to replicate the results for the effect of maternal rank on future fertility. Everything I tried gsve me the opposite result. I was a little out of my depth on that one and the methids section of the paper was not super descriptive. Moral of this story, modeling can be complicated!
