@@ -222,7 +222,7 @@ So it appears that model **glme2a** which does not include maternal rank is a be
 
 one last ditch effort:
 ```{r}
-res <- residuals(glme1d)
+res <- residuals(glme1b)
 res
 ```
 
@@ -236,8 +236,27 @@ library(curl)
 z <- curl("https://raw.githubusercontent.com/cmgagnon/cmgagnon-data-replication-assignment/master/residuals_maternal_rank_matrix.csv")
 x <- read.csv(z, header = TRUE, sep = ",", stringsAsFactors = TRUE)
 head(x)
+str(x)
+```
+```{r}
+scatter.smooth(x=x$maternal_ranks, y=x$residuals, main="Residuals ~ Maternal Rank") 
 ```
 
+```{r}
+library(curl)
+q <- curl("https://raw.githubusercontent.com/cmgagnon/cmgagnon-data-replication-assignment/master/residuals_maternal_rank_matrix2.csv")
+r <- read.csv(z, header = TRUE, sep = ",", stringsAsFactors = TRUE)
+head(r)
+str(r)
+```
+
+```{r}
+scatter.smooth(x=r$maternal_ranks, y=r$residuals, main="Residuals ~ Maternal Rank") 
+```
+
+```{r}
+#lm1 <- lm(x, residuals ~ maternal_ranks)
+```
 
 ```{r}
 #d$maternal_rank <- as.numeric(as.character(d$maternal_rank))
