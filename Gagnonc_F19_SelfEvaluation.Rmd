@@ -1,0 +1,147 @@
+---
+title: "AN597: End-of-Semester Self Evaluation"
+author: "Christian Gagnon"
+date: "12/17/2019"
+output: 
+  rmarkdown::html_document:
+    theme: cosmo
+---
+
+
+***
+
+###[Course Overview](https://fuzzyatelin.github.io/bioanth-stats/overview.html)
+###[Course Outline](https://fuzzyatelin.github.io/bioanth-stats/outline.html)
+###[Resources](https://fuzzyatelin.github.io/bioanth-stats/resources.html)
+###[Policies](https://fuzzyatelin.github.io/bioanth-stats/policies.html)
+###[Insurmountable Coding Problems](https://fuzzyatelin.github.io/bioanth-stats/studentproblems.html)
+
+***
+
+<center>
+
+<font size="+2"><b>What I told myself everytime I figured out something new.</b></font></center><br>
+
+<center><p><img src="https://media.giphy.com/media/X7GcMuU2jjXEc/giphy.gif" style="border:5px solid black"></p>
+</center><br>  
+
+<center>
+This class challenged me to figure things out own my own. Although this can be frustrating at times, I pushed myself to keep at it. The final results were not always exactly what I wanted but I learned a ton on the journey to get there.
+
+</center>
+***
+
+## Instructions
+
+***
+
+Please download this Markdown file (`selfevaluation.Rmd`) from my GitHub site (in the `fuzzyatelin.github.io/bioanth-stats/` folder) and answer the appropriate questions in the spaces provided. Once you've knitted the final file, please *email* the **html** version of that file to me with the name `[LastF]_F19_SelfEvaluation.html` (with `LastF` meaning your last name followed by your first initial, i.e., mine would be called `SchmittC_F19_SelfEvaluation.html`). I must receive this file by **Midnight of December 17, 2019**.
+
+***
+
+### Overall Impression
+
+***
+
+In place of my name as author on this Markdown file, please insert your own, along with the date on which you completed this self-assessment. In place of the RuPaul GIF, above, please choose a GIF of a drag queen that best exemplifies your overall feelings about what you learned/accomplished in this course. Additionally, replace the `The following self evaluation...` text below your GIF with a three sentence summary of your experience in the class and what you take away from it to accompany that GIF. You may also choose a catchy title.
+
+***
+
+### What were you asked to do?
+
+***
+
+Please give me a bulleted/numbered list of each task you were asked to do for this course. Where relevant, please also link the *html* version of the file representing each task, in your own repos, to the bulleted entry for that task.
+
+* Keep up with the reading in "The Book of R" and "R in action".
+* Complete the appropriate modules on our own ahead of class.
+* [Homework1](https://github.com/cmgagnon/AN597-Week-2-cmgagnon/blob/master/AN597-Week-2-cmgagnon.html) + peer commentary
+* [Homework2](https://github.com/cmgagnon/AN597_Week_3_cmgagnon/blob/master/cmgagnon_FINALhomeworkcode_02.html) + peer commentary
+* [Homework3](https://github.com/cmgagnon/AN597_Zombies_cmgagnon/blob/master/cmgagnon_Finalhomeworkcode_03.Rmd) (did not want to knit) + peer commentary
+* [Homework4](https://github.com/cmgagnon/AN597_Malfunction_cmgagnon/blob/master/cmgagnon_OriginalHomeworkCode_04.html) + peer commentary
+* [Homework5](https://github.com/cmgagnon/AN597_Boots_cmgagnon/blob/master/cmgagnon_finalhomeworkcode_05.html) + peer commentary
+* [Group Project](https://github.com/laurabw/AN597_GroupProject_LLMC/blob/master/AN597_GroupProject_LLMC_Final2.html)
+* [Replication assignment](https://github.com/cmgagnon/cmgagnon-data-replication-assignment/blob/master/cmgagnon-data-replication-assignment.html)
+* This
+
+
+***
+
+### What did you accomplish?
+
+***
+
+Please let me know how many of the above tasks you accomplished. If any of them were accomplished later than stipulated, please note that. If you contacted me about them being late (and we discussed it and I said it was ok), please note that, too. You may provide a bulleted/numbered list matching the one above.
+
+* I did a good portion of the readings. 
+* I always did the modules before class.
+* I got all of the homework assignments finished. I was late with my peer commentaries a couple of times and I think I missed one of the sunday deadlines but I got it done before that mondays class. There was one week that noone sent me any code to comment on. I made an effort to reach out via email but got no response.
+* My group and I did our project to the best of our ability. I thought our group presentation went well.
+* Replication project: I turned in what I had by 5pm yesterday. I was not veryhappy with it so I kept working on it until the next day. I tried my best and although it is far from perfect, I am fairly happy with the work I put in.
+* I am a bit late on this self assessment. Mostly because I was working obsessively on my replication assignment.
+
+
+***
+
+### How well did you accomplish them?
+
+***
+
+Please let me know how well you feel you accomplished your tasks, in a general sense. What do you feel you did the best, and what did you do the least well? What was the hardest part for you? Did your work/understanding/ease improve over the course of the semester?
+
+In the end I think that did a good job on my assignments. I was able to figure out many things that my peers struggled with which felt good. Not to see everyone else fail, but to show myself that sort-of know what I'm doing. Obviously I struggled with a few deadlines in the second half of the semester. I do think my understanting improve over the course of the semester. I can still get stuck on something for hours but I think I am getting better at troubleshooting code.
+
+***
+
+### How has your understanding of and approach to statistics and project design changed since taking this course?
+
+***
+
+This may be in relation to previous knowledge, or in relation to future/planned work.
+
+I am taking away alot of valuable tools from this class. Like I just mentioned, I think my troubleshooting skills are much better than they were. I finally feel comfortable with version control. I generally have a better understanding of what different statistical tests do and when it is appropriate to use them. These are all important skills that will I will continue to build on as I am certain I will be using many in my current and future research. 
+
+***
+
+### What did you learn from all this?
+
+***
+
+Please name at least three things you feel you learned in this course.
+
+* Version control.
+* How to be more self-sufficient and troubleshoot my own code.
+* How to do linear regression in R.
+
+***
+
+### How did the Peer Commentary process and Group Project relate, if at all, to what you view as your successes or difficulties in this course?
+
+***
+
+If I am being honest, the peer commentary was not super helpful except that it allowed me to view other peoples code to compare. I mostly figured stuff out on my own. As far as the group project goes, I think I really benefited from it. I learned alot working with my group, researching new methods and troubleshooting code.
+
+***
+
+### What, if anything, of lasting value do you take away from this experience? If nothing, what would you do differently if you were to start over in this course? 
+
+***
+
+Like I have said a few times already, I learned alot from being pushed to do things I was not comfortable with. All the trial and error and the trouble shooting has definately made me a better bioinformaticist.
+
+***
+
+### Taking this self-assessment into account (and with **A** being the highest), if you were the instructor, what grade would you give yourself given your evaluation of your own performance this semester? Please be honest.
+
+***
+
+As you know, I was spread very thin this semester and I struggled a bit with time management. However, I did manage to get all of my assignments in (albeit a little late sometimes). I think that the effort I put forth on the assignments translated into quality work and I learned alot in the process. I would like to think that my efforts earned me an A, but I would understand if my lack of timeliness cost me a half of a letter grade.
+
+***
+
+<br><center>[A or A-]</center><br>
+
+***
+
+
+
